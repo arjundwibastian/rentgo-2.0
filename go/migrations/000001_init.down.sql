@@ -1,14 +1,15 @@
-DROP TRIGGER IF EXISTS trg_users_updated_at ON users;
-DROP TRIGGER IF EXISTS trg_vehicles_updated_at ON vehicles;
-DROP TRIGGER IF EXISTS trg_bookings_updated_at ON bookings;
 
+BEGIN;
 
+-- Reverse dependency order: children before parents.
+DROP TABLE IF EXISTS payment_events;
+DROP TABLE IF EXISTS refunds;
+DROP TABLE IF EXISTS payments;
 DROP TABLE IF EXISTS bookings;
 DROP TABLE IF EXISTS vehicles;
 DROP TABLE IF EXISTS users;
 
+-- Safe now: every trigger that used it was dropped with its table.
+DROP FUNCTION IF EXISTS set_updated_at();
 
-
-DROP FUNCTION IF EXISTS update_updated_at_column();
-DROP TYPE IF EXISTS booking_status;
-DROP TYPE IF EXISTS user_role;
+COMMIT;
