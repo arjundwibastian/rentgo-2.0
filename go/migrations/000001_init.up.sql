@@ -63,7 +63,7 @@ CREATE TABLE bookings (
     total_price     BIGINT GENERATED ALWAYS AS (daily_rate * total_days) STORED,
     status          TEXT        NOT NULL DEFAULT 'pending_payment'
                     CONSTRAINT bookings_status_check
-                    CHECK (status IN ('pending_payment','confirmed','completed','expired','cancelled')),
+                    CHECK (status IN ('pending_payment','confirmed','completed','overdue','cancelled')),
     hold_expires_at TIMESTAMPTZ,
     returned_at     TIMESTAMPTZ,
     returned_by     UUID REFERENCES users(id) ON DELETE RESTRICT,
