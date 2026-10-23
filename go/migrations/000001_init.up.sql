@@ -125,7 +125,7 @@ CREATE TABLE payments (
 );
 
 CREATE UNIQUE INDEX ux_payments_active
-    ON payments (booking_id, kind)
+    ON payments (booking_id)
     WHERE status = 'pending';
 CREATE UNIQUE INDEX ux_payments_provider_ref
     ON payments (provider, provider_ref)

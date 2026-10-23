@@ -1,12 +1,16 @@
-package domain
+package domain // or booking, auth, errs, etc.
 
 import "errors"
 
-var ErrNotFound = errors.New("ERROR: data not found")
-var ErrEmailRegistered = errors.New("ERROR: Email already registered!")
-var InvalidEmailorPassword = errors.New("ERROR: Invalid email or password")
-var ErrvehicleUnavailable = errors.New("ERROR: vehicle fully booked for selected date")
-var ErrInvalidBookingUserID = errors.New("Error: user is not allowed to cancel this booking")
-var ErrInvalidConfirmInput = errors.New("Error:Invalid cancel confirmation input")
-var ErrNotEnoughBalance = errors.New("Error: your balance is not enough to make this booking! please top up to increase your balance.")
-var ErrInvalidBookingCancel = errors.New("Error: your booking cant be cancelled because booking is completed or already cancelled")
+var (
+	ErrNotFound             = errors.New("data not found")
+	ErrEmailRegistered      = errors.New("email already registered")
+	ErrInvalidCredentials   = errors.New("invalid email or password")
+	ErrVehicleUnavailable   = errors.New("vehicle fully booked for selected date")
+	ErrUnauthorizedBooking  = errors.New("user not authorized to cancel booking")
+	ErrInvalidConfirmInput  = errors.New("invalid cancel confirmation input")
+	ErrInsufficientBalance  = errors.New("insufficient balance")
+	ErrBookingAlreadyClosed = errors.New("booking completed or already cancelled")
+	ErrFailedGenerateUUID = errors.New("Failed to Generate UUID")
+	ErrForbidden = errors.New("Forbidden to access")
+)
