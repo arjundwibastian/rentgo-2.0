@@ -5,13 +5,23 @@ import (
 	"errors"
 	"milestone-02/internal/domain"
 	"milestone-02/internal/dto"
+	"time"
 	"uuid"
 
+	"github.com/golang-jwt/jwt/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
+type CustomClaims struct {
+	UserID string `json:"user_id"`
+	Role   domain.Role `json:"role"`
+	jwt.RegisteredClaims
+}
+
 type authUseCase struct {
 	repo domain.UserRepository
+	jwtDuration time.Duration
+	jwtSecret []byte
 }
 
 func NewAuthUseCase(repo domain.UserRepository) domain.AuthUseCase {
@@ -63,5 +73,27 @@ func (ac *authUseCase) Login(ctx context.Context, req dto.LoginRequest) (*dto.Lo
 	if !user.IsActive {
 		return nil, domain.ErrForbidden
 	}
+	token, err := ac.GenerateToken(string(user.ID[:]), user.Role, ac.jwtDuration, ac.jwtSecret)
+	if err != nil {
+		return nil, domain.ErrFailedGenerateToken
+	}
+	return &dto.LoginResponse{Token: token}, nil
+}
 
+func (ac *authUseCase) GenerateToken(userID string, userRole domain.Role, duration time.Duration, secretKey []byte) (string, error) {
+	claims := CustomClaims{
+		UserID: userID,
+		Role:   userRole,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(duration)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			Subject:   userID, 
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(secretKey)
+	if err != nil {
+		return "", err
+	}
+	return tokenString, nil	
 }

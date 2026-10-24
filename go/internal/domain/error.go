@@ -13,4 +13,5 @@ var (
 	ErrBookingAlreadyClosed = errors.New("booking completed or already cancelled")
 	ErrFailedGenerateUUID = errors.New("Failed to Generate UUID")
 	ErrForbidden = errors.New("Forbidden to access")
+	ErrFailedGenerateToken = errors.New("Failed to generate Token")
 )
